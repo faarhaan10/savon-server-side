@@ -30,6 +30,13 @@ async function run() {
             res.send(result);
         })
 
+        // get all data api 
+        app.get('/soaps', async (req, res) => {
+            const cursor = soapCollection.find({});
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
     }
     finally {
         // await client.close();

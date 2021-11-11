@@ -32,7 +32,7 @@ async function run() {
 
         // get all data api 
         app.get('/soaps', async (req, res) => {
-            const cursor = soapCollection.find({});
+            const cursor = soapCollection.find({}).sort({ "_id": -1 });
             const result = await cursor.toArray();
             res.send(result);
         })

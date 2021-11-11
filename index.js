@@ -25,7 +25,9 @@ async function run() {
 
         // insert data api 
         app.post('/soaps', async (req, res) => {
-            console.log(hitted);
+            const soap = req.body;
+            const result = await soapCollection.insertOne(soap);
+            res.send(result);
         })
 
     }
@@ -34,23 +36,6 @@ async function run() {
     }
 }
 run().catch(console.dir);
-
-console.log(uri)
-client.connect(err => {
-    const collection = client.db("test").collection("devices");
-    // perform actions on the collection object
-    // client.close();
-});
-
-
-
-
-
-
-
-
-
-
 
 
 //default api's

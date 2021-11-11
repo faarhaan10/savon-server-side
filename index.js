@@ -32,8 +32,15 @@ async function run() {
 
         // get all data api 
         app.get('/soaps', async (req, res) => {
+            const query = parseInt(req.query?.size);
             const cursor = soapCollection.find({}).sort({ "_id": -1 });
-            const result = await cursor.toArray();
+            let result;
+            if (query) {
+                result = await cursor.limit(query).toArray();
+            }
+            else {
+                result = await cursor.toArray();
+            }
             res.send(result);
         })
 

@@ -24,6 +24,7 @@ async function run() {
         const database = client.db("savon");
         const soapCollection = database.collection("soaps");
         const customerCollection = database.collection("customers");
+        const userCollection = database.collection("users");
 
         // insert data api 
         app.post('/soaps', async (req, res) => {
@@ -94,6 +95,32 @@ async function run() {
             const updateDoc = { $set: doc };
             const options = { upsert: true };
             const result = await customerCollection.updateOne(query, updateDoc, options);
+            res.send(result);
+        });
+
+        //post users
+        app.post('/users', async (req, res) => {
+            const doc = req.body;
+            const result = await userCollection.insertOne(doc);
+            res.send(result);
+        });
+
+        //update users
+        app.put('/users', async (req, res) => {
+            const doc = req.body;
+            const filter = { email: doc.email };
+            const options = { upsert: true };
+            const updateDoc = { $set: doc };
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            res.send(result);
+        });
+
+        //update users as admin
+        app.put('/users/admin', async (req, res) => {
+            const doc = req.body;
+            const filter = { email: doc.email };
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await userCollection.updateOne(filter, updateDoc);
             res.send(result);
         });
 

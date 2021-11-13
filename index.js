@@ -61,6 +61,42 @@ async function run() {
             res.send(result);
         })
 
+        //get customers
+        app.get('/customers', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+
+            let result;
+            if (email) {
+                const cursor = customerCollection.find(query).sort({ "_id": -1 });
+                result = await cursor.toArray();
+            }
+            else {
+                const cursor = customerCollection.find({}).sort({ "_id": -1 });
+                result = await cursor.toArray();
+            }
+            res.send(result);
+        })
+
+        //cancel customer order
+        app.delete('/customers/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await customerCollection.deleteOne(query);
+            res.send(result);
+        });
+
+        //update customer order status
+        app.put('/customers/:id', async (req, res) => {
+            const id = req.params.id;
+            const doc = req.body;
+            const query = { _id: ObjectId(id) };
+            const updateDoc = { $set: doc };
+            const options = { upsert: true };
+            const result = await customerCollection.updateOne(query, updateDoc, options);
+            res.send(result);
+        });
+
     }
     finally {
         // await client.close();

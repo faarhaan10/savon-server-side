@@ -23,6 +23,7 @@ async function run() {
         // db collections
         const database = client.db("savon");
         const soapCollection = database.collection("soaps");
+        const customerCollection = database.collection("customers");
 
         // insert data api 
         app.post('/soaps', async (req, res) => {
@@ -53,6 +54,13 @@ async function run() {
             res.send(result);
         })
 
+        //post customers
+        app.post('/customers', async (req, res) => {
+            const doc = req.body;
+            const result = await customerCollection.insertOne(doc);
+            res.send(result);
+        })
+
     }
     finally {
         // await client.close();
@@ -70,4 +78,4 @@ app.listen(port, () => {
     console.log('DB is running on port', port);
 });
 //heroku deployed
-//server: https://savon-server-sider-api.herokuapp.com/
+//server:           

@@ -3,6 +3,7 @@ const cors = require('cors');
 const { MongoClient } = require('mongodb');
 const ObjectId = require("mongodb").ObjectId;
 const { urlencoded } = require('express');
+const fileUpload = require('express-fileupload');
 require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -10,6 +11,7 @@ const port = process.env.PORT || 5000;
 //middle weares
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload());
 
 //mongodb connection tools
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.y4qnm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -28,12 +30,26 @@ async function run() {
         const userCollection = database.collection("users");
         const reviewCollection = database.collection("reviews");
 
-        // insert data api 
+        // insert data api with img bb
         app.post('/soaps', async (req, res) => {
             const soap = req.body;
             const result = await soapCollection.insertOne(soap);
             res.send(result);
         })
+
+        // insert data with live image 
+        // app.post('/soaps', async (req, res) => {
+        //     const doc = req.body;
+        //     const pic = req.files.image;
+        //     const picData = pic.data;
+        //     const encodedPic = picData.toString('base64');
+        //     const image = Buffer.from(encodedPic, 'base64');
+        //     const product = { image, ...doc };
+        //     console.log(product);
+        //     // const soap = req.body;
+        //     const result = await soapCollection.insertOne(product);
+        //     res.send(result);
+        // })
 
         // get all data api 
         app.get('/soaps', async (req, res) => {
